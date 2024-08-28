@@ -11,3 +11,7 @@ Integrantes
 
 Funcionalidades
 
+1 Tener detallada la ruta de cada camion y la carga a transportar
+2 Que no haya rutas repetidas o superpuestas 
+
+
