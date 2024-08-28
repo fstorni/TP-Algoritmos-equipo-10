@@ -1,5 +1,6 @@
 GRUPO 10
 
+
 Tema: Sistema de logistica de venta y stock
 
 Integrantes
