@@ -3,8 +3,8 @@
 # GRUPO 10
 # Integrantes:
 
-- Sofia Denise Canzian,
-- Felipe Storni,
+- Sofia Denise Canzian
+- Felipe Storni
 - Jonas Mayer 
 
 # Descripcion del problema
@@ -12,7 +12,7 @@
 La empresa enfrenta ineficiencias en sus operaciones logísticas:
 - Envío de múltiples camiones a la misma ubicación para recoger mismos materiales.
 - Rutas de transporte que no están optimizadas, provocando perdida de tiempos y recursos
-
+- 
 
 # Contenido:
 - Listas: Para manejar los grupos de camiones, segun que material transporten
@@ -30,6 +30,7 @@ La empresa enfrenta ineficiencias en sus operaciones logísticas:
 2. Gestion de materiales
 3. Programacion de traslados segun datos registrados
 
+
 # Funcionalidades:
 
 - Carga y procesamiento de datos sobre camiones en uso segun su id, rutas de destino segun su id  y materiales a transportar segun su tipo 
@@ -41,9 +42,12 @@ La empresa enfrenta ineficiencias en sus operaciones logísticas:
 
 - Control de datos por mes
     - def lee_valida_rango(mes):
-    - def calendaio(matriz,codigos):
+    - def calendario(matriz,codigos):
 
 - Control de cantidades de carga
 
-    - def carga():
+    - def ingreso_carga():
+    - def validacion_carga():
+
+
 
