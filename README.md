@@ -1,4 +1,3 @@
-Trabajo Practico, Progra 1 !!!!!!!!
 # Tema: Sistema de logistica 
 
 # GRUPO 10
@@ -27,21 +26,24 @@ La empresa enfrenta ineficiencias en sus operaciones logísticas:
 
 # Solucion propuesta:
 
-1. Llevar a acabo un registro de camiones (segun su id), transportitas y carga
-2. 
-3. Agrupar tareas: Planear retirada y entrega de materiales de forma lógica y eficiente.
+1. Llevar a acabo un registro de camiones, transportitas y carga
+2. Gestion de materiales
+3. Programacion de traslados segun datos registrados
 
 # Funcionalidades:
 
-- Carga y procesamiento de datos sobre camiones en uso, destinos y materiales a transportar.
+- Carga y procesamiento de datos sobre camiones en uso segun su id, rutas de destino segun su id  y materiales a transportar segun su tipo 
 
-def inicializar_matriz(matriz,cf,cc):
-def codigo_camion(codigos):
-def lee_valida_rango(mes):
+    - def inicializar_matriz(matriz,cf,cc):
+    - def codigo_camion(codigos): 
+    - def carga_archivo():
 
 
 - Control de datos por mes
+    - def lee_valida_rango(mes):
+    - def calendaio(matriz,codigos):
+
 - Control de cantidades de carga
 
-
+    - def carga():
 
