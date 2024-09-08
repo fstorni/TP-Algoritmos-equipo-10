@@ -1,5 +1,5 @@
 # Tema: Sistema de logistica 
- jony esta aca
+
 # GRUPO 10
 # Integrantes:
 
