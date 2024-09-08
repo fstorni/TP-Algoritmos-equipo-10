@@ -12,42 +12,20 @@
 La empresa enfrenta ineficiencias en sus operaciones logísticas:
 - Envío de múltiples camiones a la misma ubicación para recoger mismos materiales.
 - Rutas de transporte que no están optimizadas, provocando perdida de tiempos y recursos
-- 
+- Repeticiones en envios y entregas de materiales
 
 # Contenido:
 - Listas: Para manejar los grupos de camiones, segun que material transporten
-- Matrices: Para representar el calendario del mes y asi tener un registro de cargas y materiales transportados
-- Diccionarios: 
-- Archivos: Para registrar camiones, transportistas y cargas
-- Funciones Lambda: 
-- Recursividad: Para coordinar las rutas de los camiones evitando erores o repeticiones de ruta  
-- Excepciones: Para manejar datos erroneos ingresados por el usuario del sistema.
+- Matrices: Para representar un registro de camiones, cargas y rutas
+- Funciones: Para modularizar el programa
+  
+# Funcionalidades del programa para resolver problematica
+1. Llevar a acabo un registro de camiones, transportitas, carga y ruta seleccionada
+2. Llevar un registro de viajes de cada camion por semana 
+3. Poder planificar proximos viajes sin repeticiones de camiones, cargas o rutas
+4. Gestionar recursos de la empresa de manera eficiente 
 
 
-# Solucion propuesta:
-
-1. Llevar a acabo un registro de camiones, transportitas y carga
-2. Gestion de materiales
-3. Programacion de traslados segun datos registrados
-
-
-# Funcionalidades:
-
-- Carga y procesamiento de datos sobre camiones en uso segun su id, rutas de destino segun su id  y materiales a transportar segun su tipo 
-
-    - def inicializar_matriz(matriz,cf,cc):
-    - def codigo_camion(codigos): 
-    - def carga_archivo():
-
-
-- Control de datos por mes
-    - def lee_valida_rango(mes):
-    - def calendario(matriz,codigos):
-
-- Control de cantidades de carga
-
-    - def ingreso_carga():
-    - def validacion_carga():
 
 
 
