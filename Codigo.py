@@ -21,11 +21,11 @@ def mostrar_datos(matriz):
     """Muestra todos los datos almacenados en la matriz con alineación adecuada."""
     print("\nDatos de los camiones:")
     print("\n")
-    print(f"{'Camion':<10} {'Transportista':<20} {'Material':<15} {'Ruta':<15}")
+    print(f"{'Camion':<20} {'Transportista':<20} {'Material':<20} {'Ruta':<20}")
     print("-" * 60)  # Línea separadora para mayor claridad
 
     for fila in matriz:
-        print(f"{fila[0]:<10} {fila[1]:<20} {fila[2]:<15} {fila[3]:<15}")
+        print(f"{fila[0]:<20} {fila[1]:<20} {fila[2]:<20} {fila[3]:<20}")
 
 
 def main():
