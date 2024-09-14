@@ -1,3 +1,11 @@
+#Falta desarrollas funciones con respecto a sotck
+#falta ultimoas impresiones (matrices finales)
+#se necesita aclarar codigo de ruta 
+#agregar docstrings o comentarios 
+
+
+
+
 # Diccionario de rutas inicial
 Rutas = {
     'Ruta1': 'Mendoza',
