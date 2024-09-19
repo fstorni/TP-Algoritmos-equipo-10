@@ -75,6 +75,7 @@ def cargar_datos_camiones():
             print("Error: La cantidad a transportar debe ser un número positivo.")
             cantidad_material = int(input("Cuantos kg se van a transportar de ese material? "))
 
+        #diccionario de diccionario(codigo_camion como clave, valor asociado es el otro dic)
         camiones[codigo_camion] = {
             'nombre_transportista': nombre_transportista,
             'material': material_transportar,
@@ -104,7 +105,7 @@ def cargar_rutas(camiones, rutas_disponibles):
 
 def crear_matriz_rutas(dias, camiones):
     """Crea una matriz de rutas, solo para almacenar las rutas de cada día y camión."""
-    return [["" for _ in range(len(camiones))] for _ in range(dias)]
+    return [["" for camion in range(len(camiones))] for dia in range(dias)]
 
 def cargar_matriz_rutas(matriz, camiones):
     """Llena la matriz de rutas con las rutas que deben transitar los camiones cada día."""
@@ -120,28 +121,39 @@ def verificar_rutas(camiones):
 
     for dia in dias_semana:
         rutas_dia = {}
-        # Recorremos las rutas de cada camión en el día específico
-        for codigo_camion, datos_camion in camiones.items():
-            ruta = datos_camion['rutas'][dia]
+        repetir = True
 
-            # Si la ruta ya existe en otro camión para ese día, hay una repetición
-            if ruta in rutas_dia and ruta != "Sin viaje":
-                print(f"\n¡Repetición detectada el {dia} en la ruta {ruta} entre los camiones {codigo_camion} y {rutas_dia[ruta]}!")
-                
-                # Permitir reprogramar la ruta repetida
-                while True:
-                    reprogramar_camion = input(f"¿Qué camión desea reprogramar, {codigo_camion} o {rutas_dia[ruta]}? ").strip()
-                    if reprogramar_camion in [codigo_camion, rutas_dia[ruta]]:
-                        nuevo_destino = input(f"Ingrese el nuevo destino para el camión {reprogramar_camion}: ").strip().capitalize()
-                        camiones[reprogramar_camion]['rutas'][dia] = nuevo_destino
-                        print(f"Ruta del camión {reprogramar_camion} reprogramada a {nuevo_destino} para el {dia}.")
-                        break
-                    else:
-                        print("Error: Código de camión no válido. Intente nuevamente.")
-            else:
-                rutas_dia[ruta] = codigo_camion  # Guardamos la ruta como única por ahora
+        # Repetimos la verificación hasta que no haya más rutas duplicadas
+        while repetir:
+            repetir = False
+            rutas_dia.clear()
+
+            # Recorre las rutas de cada camión en el día específico
+            for codigo_camion, datos_camion in camiones.items():
+                ruta = datos_camion['rutas'][dia]
+
+                # Si la ruta ya existe en otro camión para ese día, hay una repetición
+                if ruta in rutas_dia and ruta != "Sin viaje":
+                    print(f"\n¡Repetición detectada el {dia} en la ruta {ruta} entre los camiones {codigo_camion} y {rutas_dia[ruta]}!")
+                    
+                    camion_reprogramado = False  
+                    
+                    # Permitir reprogramar la ruta repetida
+                    while not camion_reprogramado:
+                        reprogramar_camion = input(f"¿Qué camión desea reprogramar, {codigo_camion} o {rutas_dia[ruta]}? ").strip()
+                        if reprogramar_camion in [codigo_camion, rutas_dia[ruta]]:
+                            nuevo_destino = input(f"Ingrese el nuevo destino para el camión {reprogramar_camion}: ").strip().lower()
+                            camiones[reprogramar_camion]['rutas'][dia] = nuevo_destino
+                            print(f"Ruta del camión {reprogramar_camion} reprogramada a {nuevo_destino} para el {dia}.")
+                            repetir = True 
+                            camion_reprogramado = True  
+                        else:
+                            print("Error: Código de camión no válido. Intente nuevamente.")
+                else:
+                    rutas_dia[ruta] = codigo_camion  
 
     return camiones
+
 
 def gestionar_stock(camiones, stock_actual):
     """Calcula el total de material transportado y verifica si hay faltante para los próximos viajes."""
@@ -165,7 +177,7 @@ def mostrar_matriz_rutas(matriz, camiones):
         print(f"{dia:<15} " + " ".join([f"{matriz[i][j]:<15}" for j in range(len(camiones))]))
 
 def mostrar_datos_camiones(camiones):
-    """Muestra todos los datos de los camiones en formato de tabla."""
+    """Muestra todos los datos de los camiones."""
     print("\nDatos de los camiones:")
     print("\n")
     print(f"{'Camion':<10} {'Transportista':<20} {'Material':<15} {'Cantidad (kg)':<15}")
@@ -193,3 +205,4 @@ def main():
     mostrar_matriz_rutas(matriz_rutas, camiones)
 
 main()
+
