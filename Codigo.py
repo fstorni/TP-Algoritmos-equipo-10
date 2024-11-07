@@ -1,9 +1,43 @@
+import re
+
+
 # Diccionario de rutas inicial
 Rutas = {
     'ruta1': 'Mendoza',
     'ruta2': 'Córdoba',
     'ruta3': 'Entre Ríos'
 }
+
+# Subfunciones para gestionar_rutas
+def mostrar_rutas(rutas):
+    """Muestra las rutas actuales."""
+    print("\nRutas actuales:")
+    for ruta_id, destino in rutas.items():
+        print(f"{ruta_id}: {destino}")
+
+def actualizar_ruta(rutas):
+    """Actualiza una ruta existente."""
+    print("\nRutas disponibles para actualizar:")
+    for ruta_id, destino in rutas.items():
+        print(f"{ruta_id}: {destino}")
+    actualizar_ruta = input("Ingrese el código de la ruta a actualizar (ruta+(numero)): ").strip().lower()
+
+    if actualizar_ruta in rutas:
+        nuevo_destino = input(f"Ingrese el nuevo destino para la {actualizar_ruta}: ").strip()
+        rutas[actualizar_ruta] = nuevo_destino
+        print(f"Ruta {actualizar_ruta} actualizada a {nuevo_destino}.")
+    else:
+        print("Error: El código de ruta no existe.")
+
+def agregar_ruta(rutas):
+    """Agrega una nueva ruta."""
+    nuevo_codigo = input("Ingrese el código para la nueva ruta (ej: ruta4): ").strip().lower()
+    if nuevo_codigo in rutas:
+        print("Error: El código de ruta ya existe.")
+    else:
+        nuevo_destino = input("Ingrese el destino para la nueva ruta: ").strip()
+        rutas[nuevo_codigo] = nuevo_destino
+        print(f"Nueva ruta agregada: {nuevo_codigo} -> {nuevo_destino}")
 
 def gestionar_rutas(rutas):
     """Permite al usuario actualizar o agregar rutas al diccionario de rutas."""
@@ -17,35 +51,11 @@ def gestionar_rutas(rutas):
         opcion = input("Seleccione una opción (1-4): ")
 
         if opcion == '1':
-            # Mostrar rutas actuales
-            print("\nRutas actuales:")
-            for ruta_id, destino in rutas.items():
-                print(f"{ruta_id}: {destino}")
-
+            mostrar_rutas(rutas)
         elif opcion == '2':
-            # Actualizar una ruta existente
-            print("\nRutas disponibles para actualizar:")
-            for ruta_id, destino in rutas.items():
-                print(f"{ruta_id}: {destino}")
-            actualizar_ruta = input("Ingrese el código de la ruta a actualizar (ruta+(numero)): ").strip().lower()
-
-            if actualizar_ruta in rutas:
-                nuevo_destino = input(f"Ingrese el nuevo destino para la {actualizar_ruta}: ").strip()
-                rutas[actualizar_ruta] = nuevo_destino
-                print(f"Ruta {actualizar_ruta} actualizada a {nuevo_destino}.")
-            else:
-                print("Error: El código de ruta no existe.")
-
+            actualizar_ruta(rutas)
         elif opcion == '3':
-            # Agregar una nueva ruta
-            nuevo_codigo = input("Ingrese el código para la nueva ruta (ej: ruta4): ").strip().lower()
-            if nuevo_codigo in rutas:
-                print("Error: El código de ruta ya existe.")
-            else:
-                nuevo_destino = input("Ingrese el destino para la nueva ruta: ").strip()
-                rutas[nuevo_codigo] = nuevo_destino
-                print(f"Nueva ruta agregada: {nuevo_codigo} -> {nuevo_destino}")
-
+            agregar_ruta(rutas)
         elif opcion == '4':
             print("Saliendo de la gestión de rutas.")
             bandera = False
@@ -53,39 +63,48 @@ def gestionar_rutas(rutas):
             print("Opción no válida. Por favor, intente de nuevo.")
     return rutas
 
-def cargar_datos_camiones():
-    """Carga datos de los camiones en un diccionario."""
-    camiones = {}
-    bandera = True
-    while bandera:
-        codigo_camion = input("Ingrese el código del camión: ")
 
-        while not codigo_camion.isdigit() or int(codigo_camion) < 0:
-            print("Error: El código del camión debe ser un número positivo.")
-            codigo_camion = input("Ingrese el código del camión: ")
+def cargar_datos_camiones():
+    """Carga datos de los camiones en una lista de diccionarios, validando la patente."""
+    camiones = []
+    bandera = True
+
+    while bandera:
+        # Validar el formato de la patente
+        es_patente_valida = False
+        while not es_patente_valida:
+            patente_camion = input("Ingrese la patente del camión (formato 'AB 123 CD'): ").strip().upper()
+            if re.match(r"^[A-Z]{2} \d{3} [A-Z]{2}$", patente_camion):
+                es_patente_valida = True  # La patente es válida, salimos del bucle
+            else:
+                print("Error: La patente debe tener el formato 'AB 123 CD'.")
 
         nombre_transportista = input("Ingrese el nombre del transportista: ")
+        
         material_transportar = input("Ingrese el material a transportar: ")
         while not material_transportar.isalpha():
             print("Error: El material debe ser una cadena de caracteres.")
             material_transportar = input("Ingrese el material a transportar: ")
 
-        cantidad_material = int(input("Cuantos kg se van a transportar de ese material? "))
+        cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
         while cantidad_material <= 0:
             print("Error: La cantidad a transportar debe ser un número positivo.")
-            cantidad_material = int(input("Cuantos kg se van a transportar de ese material? "))
+            cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
 
-        #diccionario de diccionario(codigo_camion como clave, valor asociado es el otro dic)
-        camiones[codigo_camion] = {
+        camiones.append({
+            'patente': patente_camion,
             'nombre_transportista': nombre_transportista,
             'material': material_transportar,
             'cantidad': cantidad_material,
-            'rutas': {}
-        }
+            'rutas': [] 
+        })
 
         continuar = input("¿Desea ingresar otro camión? (s/n): ").lower()
         bandera = continuar != 'n'
+    
     return camiones
+
+
 
 def cargar_rutas(camiones, rutas_disponibles):
     """Carga las rutas para cada camión para cada día de la semana."""
@@ -101,7 +120,6 @@ def cargar_rutas(camiones, rutas_disponibles):
             else:
                 print(f"La ruta {ruta} no es válida.")
     return camiones
-
 
 def crear_matriz_rutas(dias, camiones):
     """Crea una matriz de rutas, solo para almacenar las rutas de cada día y camión."""
@@ -123,22 +141,18 @@ def verificar_rutas(camiones):
         rutas_dia = {}
         repetir = True
 
-        # Repetimos la verificación hasta que no haya más rutas duplicadas
         while repetir:
             repetir = False
             rutas_dia.clear()
 
-            # Recorre las rutas de cada camión en el día específico
             for codigo_camion, datos_camion in camiones.items():
                 ruta = datos_camion['rutas'][dia]
 
-                # Si la ruta ya existe en otro camión para ese día, hay una repetición
                 if ruta in rutas_dia and ruta != "Sin viaje":
                     print(f"\n¡Repetición detectada el {dia} en la ruta {ruta} entre los camiones {codigo_camion} y {rutas_dia[ruta]}!")
                     
                     camion_reprogramado = False  
                     
-                    # Permitir reprogramar la ruta repetida
                     while not camion_reprogramado:
                         reprogramar_camion = input(f"¿Qué camión desea reprogramar, {codigo_camion} o {rutas_dia[ruta]}? ").strip()
                         if reprogramar_camion in [codigo_camion, rutas_dia[ruta]]:
@@ -153,7 +167,6 @@ def verificar_rutas(camiones):
                     rutas_dia[ruta] = codigo_camion  
 
     return camiones
-
 
 def gestionar_stock(camiones, stock_actual):
     """Calcula el total de material transportado y verifica si hay faltante para los próximos viajes."""
@@ -177,32 +190,75 @@ def mostrar_matriz_rutas(matriz, camiones):
         print(f"{dia:<15} " + " ".join([f"{matriz[i][j]:<15}" for j in range(len(camiones))]))
 
 def mostrar_datos_camiones(camiones):
-    """Muestra todos los datos de los camiones."""
+    """Muestra todos los datos de los camiones en formato de tabla."""
     print("\nDatos de los camiones:")
     print("\n")
-    print(f"{'Camion':<10} {'Transportista':<20} {'Material':<15} {'Cantidad (kg)':<15}")
-    print("-" * 60)  # Línea separadora para mayor claridad
+    print(f"{'Patente':<10} {'Transportista':<20} {'Material':<15} {'Cantidad (kg)':<15}")
+    print("-" * 60)
 
-    for codigo_camion, datos in camiones.items():
-        print(f"{codigo_camion:<10} {datos['nombre_transportista']:<20} {datos['material']:<15} {datos['cantidad']:<15}")
+    for camion in camiones:
+        print(f"{camion['patente']:<10} {camion['nombre_transportista']:<20} {camion['material']:<15} {camion['cantidad']:<15}")
+
+
+def menu_principal():
+    """Muestra el menú principal y ejecuta la acción seleccionada por el usuario."""
+    rutas = Rutas.copy() 
+    camiones = {}
+    matriz_rutas = []
+    continuar = True  
+
+    while continuar:
+        print("\n--- Menú Principal ---")
+        print("1. Gestionar rutas")
+        print("2. Cargar datos de camiones")
+        print("3. Cargar rutas para camiones")
+        print("4. Mostrar datos de camiones")
+        print("5. Mostrar matriz de rutas")
+        print("6. Verificar rutas")
+        print("7. Gestionar stock")
+        print("8. Salir")
+        
+        opcion = input("Seleccione una opción (1-8): ")
+
+        if opcion == '1':
+            rutas = gestionar_rutas(rutas)
+        elif opcion == '2':
+            camiones = cargar_datos_camiones()
+        elif opcion == '3':
+            if camiones:
+                camiones = cargar_rutas(camiones, rutas)
+                matriz_rutas = crear_matriz_rutas(5, camiones)
+                matriz_rutas = cargar_matriz_rutas(matriz_rutas, camiones)
+            else:
+                print("Primero debe cargar los datos de los camiones.")
+        elif opcion == '4':
+            if camiones:
+                mostrar_datos_camiones(camiones)
+            else:
+                print("Primero debe cargar los datos de los camiones.")
+        elif opcion == '5':
+            if matriz_rutas:
+                mostrar_matriz_rutas(matriz_rutas, camiones)
+            else:
+                print("Primero debe cargar las rutas de los camiones.")
+        elif opcion == '6':
+            if camiones:
+                verificar_rutas(camiones)
+            else:
+                print("Primero debe cargar los datos de los camiones.")
+        elif opcion == '7':
+            if camiones:
+                stock_disponible = 1000  # Definir stock disponible
+                gestionar_stock(camiones, stock_disponible)
+            else:
+                print("Primero debe cargar los datos de los camiones.")
+        elif opcion == '8':
+            print("Saliendo del sistema. ¡Adiós!")
+            continuar = False  
+        else:
+            print("Opción no válida, intente nuevamente.")
 
 # Programa principal
-def main():
-    print("Bienvenido al sistema de gestión de camiones.")
-    rutas = gestionar_rutas(Rutas)
-    camiones = cargar_datos_camiones()
-    camiones = cargar_rutas(camiones, rutas)
+menu_principal()
 
-    matriz_rutas = crear_matriz_rutas(5, camiones)
-    matriz_rutas = cargar_matriz_rutas(matriz_rutas, camiones)
-    verificar_rutas(camiones)
-
-    # Definir stock disponible
-    stock_disponible = 1000  
-    gestionar_stock(camiones, stock_disponible)
-    
-    mostrar_datos_camiones(camiones)
-    mostrar_matriz_rutas(matriz_rutas, camiones)
-
-main()
 
