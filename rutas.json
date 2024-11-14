@@ -1,0 +1,21 @@
+{
+    "ruta1": {
+        "origen": "Buenos Aires",
+        "destino": "Mendoza"
+    },
+    "ruta2": {
+        "origen": "Buenos Aires",
+        "destino": "Córdoba"
+    },
+    "ruta3": {
+        "origen": "Buenos Aires",
+        "destino": "Entre Ríos"
+    }
+}
+
+
+
+
+
+
+
