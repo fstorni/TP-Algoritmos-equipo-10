@@ -5,11 +5,11 @@
     },
     "ruta2": {
         "origen": "Buenos Aires",
-        "destino": "Córdoba"
+        "destino": "Cordoba"
     },
     "ruta3": {
         "origen": "Buenos Aires",
-        "destino": "Entre Ríos"
+        "destino": "Entre Rios"
     }
 }
 
