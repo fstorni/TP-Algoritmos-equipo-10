@@ -37,6 +37,7 @@ def cargar_rutas_json(archivo='rutas.json'):
         print(f"Error al cargar las rutas: {e}")
         return Rutas
 
+
 def mostrar_rutas(rutas):
     """Muestra las rutas actuales."""
     print("\nRutas actuales:")
@@ -100,6 +101,7 @@ def cargar_datos_camiones():
     bandera = True
 
     while bandera:
+        # Validar el formato de la patente
         es_patente_valida = False
         while not es_patente_valida:
             patente_camion = input("Ingrese la patente del camión (formato 'AB 123 CD'): ").strip().upper()
@@ -120,11 +122,17 @@ def cargar_datos_camiones():
             print("Error: La cantidad a transportar debe ser un número positivo.")
             cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
 
+        tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
+        while tipo_viaje not in ['carga', 'descarga']:
+            print("Error: Tipo de viaje no válido. Debe ser 'carga' o 'descarga'.")
+            tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
+
         camiones.append({
             'patente': patente_camion,
             'nombre_transportista': nombre_transportista,
             'material': material_transportar,
             'cantidad': cantidad_material,
+            'tipo_viaje': tipo_viaje,
             'rutas': [] 
         })
 
@@ -231,10 +239,10 @@ def mostrar_datos_camiones(camiones):
 
 def menu_principal():
     """Muestra el menú principal y ejecuta la acción seleccionada por el usuario."""
-    # Intentar cargar rutas desde el archivo JSON al iniciar
+   
     rutas = cargar_rutas_json()
 
-    camiones = {}  # Asumiendo que esta función está definida
+    camiones = {} 
     matriz_rutas = []
     continuar = True  
 
