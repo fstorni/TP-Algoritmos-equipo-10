@@ -1,31 +1,59 @@
 import re
+import json 
 
 
 # Diccionario de rutas inicial
 Rutas = {
-    'ruta1': 'Mendoza',
-    'ruta2': 'Córdoba',
-    'ruta3': 'Entre Ríos'
+    'ruta1': {'origen': 'Buenos Aires', 'destino': 'Mendoza'},
+    'ruta2': {'origen': 'Buenos Aires', 'destino': 'Córdoba'},
+    'ruta3': {'origen': 'Buenos Aires', 'destino': 'Entre Ríos'}
 }
 
-# Subfunciones para gestionar_rutas
+def guardar_rutas_json(rutas, archivo='rutas.json'):
+    """Guarda las rutas en un archivo JSON sin codificar caracteres especiales."""
+    try:
+        with open(archivo, 'w', encoding='utf-8') as file:
+            json.dump(rutas, file, indent=4, ensure_ascii=False)
+        print(f"Rutas guardadas en {archivo}.")
+    except Exception as e:
+        print(f"Error al guardar las rutas: {e}")
+
+
+# Función para cargar rutas desde archivo JSON
+def cargar_rutas_json(archivo='rutas.json'):
+    """Carga las rutas desde un archivo JSON."""
+    try:
+        with open(archivo, 'r') as file:
+            rutas = json.load(file)
+        print(f"Rutas cargadas desde {archivo}.")
+        return rutas
+    except FileNotFoundError:
+        print(f"No se encontró el archivo {archivo}. Se usará el diccionario de rutas predeterminado.")
+        return Rutas
+    except json.JSONDecodeError:
+        print("Error: El archivo JSON está corrupto o malformado.")
+        return Rutas
+    except Exception as e:
+        print(f"Error al cargar las rutas: {e}")
+        return Rutas
+
 def mostrar_rutas(rutas):
     """Muestra las rutas actuales."""
     print("\nRutas actuales:")
-    for ruta_id, destino in rutas.items():
-        print(f"{ruta_id}: {destino}")
+    for ruta_id, datos in rutas.items():
+        print(f"{ruta_id}: Origen - {datos['origen']}, Destino - {datos['destino']}")
 
 def actualizar_ruta(rutas):
     """Actualiza una ruta existente."""
     print("\nRutas disponibles para actualizar:")
-    for ruta_id, destino in rutas.items():
-        print(f"{ruta_id}: {destino}")
-    actualizar_ruta = input("Ingrese el código de la ruta a actualizar (ruta+(numero)): ").strip().lower()
+    mostrar_rutas(rutas)
+    actualizar_ruta = input("Ingrese el código de la ruta a actualizar (ej: ruta1): ").strip().lower()
 
     if actualizar_ruta in rutas:
+        nuevo_origen = input(f"Ingrese el nuevo origen para la {actualizar_ruta}: ").strip()
         nuevo_destino = input(f"Ingrese el nuevo destino para la {actualizar_ruta}: ").strip()
-        rutas[actualizar_ruta] = nuevo_destino
-        print(f"Ruta {actualizar_ruta} actualizada a {nuevo_destino}.")
+        rutas[actualizar_ruta] = {'origen': nuevo_origen, 'destino': nuevo_destino}
+        print(f"Ruta {actualizar_ruta} actualizada a Origen: {nuevo_origen}, Destino: {nuevo_destino}.")
     else:
         print("Error: El código de ruta no existe.")
 
@@ -35,9 +63,10 @@ def agregar_ruta(rutas):
     if nuevo_codigo in rutas:
         print("Error: El código de ruta ya existe.")
     else:
+        nuevo_origen = input("Ingrese el origen para la nueva ruta: ").strip()
         nuevo_destino = input("Ingrese el destino para la nueva ruta: ").strip()
-        rutas[nuevo_codigo] = nuevo_destino
-        print(f"Nueva ruta agregada: {nuevo_codigo} -> {nuevo_destino}")
+        rutas[nuevo_codigo] = {'origen': nuevo_origen, 'destino': nuevo_destino}
+        print(f"Nueva ruta agregada: {nuevo_codigo} -> Origen: {nuevo_origen}, Destino: {nuevo_destino}")
 
 def gestionar_rutas(rutas):
     """Permite al usuario actualizar o agregar rutas al diccionario de rutas."""
@@ -47,7 +76,7 @@ def gestionar_rutas(rutas):
         print("1. Ver rutas actuales")
         print("2. Actualizar una ruta existente")
         print("3. Agregar una nueva ruta")
-        print("4. Terminar gestión de rutas")
+        print("4. Guardar y salir de gestión de rutas")
         opcion = input("Seleccione una opción (1-4): ")
 
         if opcion == '1':
@@ -57,6 +86,7 @@ def gestionar_rutas(rutas):
         elif opcion == '3':
             agregar_ruta(rutas)
         elif opcion == '4':
+            guardar_rutas_json(rutas)
             print("Saliendo de la gestión de rutas.")
             bandera = False
         else:
@@ -70,12 +100,11 @@ def cargar_datos_camiones():
     bandera = True
 
     while bandera:
-        # Validar el formato de la patente
         es_patente_valida = False
         while not es_patente_valida:
             patente_camion = input("Ingrese la patente del camión (formato 'AB 123 CD'): ").strip().upper()
             if re.match(r"^[A-Z]{2} \d{3} [A-Z]{2}$", patente_camion):
-                es_patente_valida = True  # La patente es válida, salimos del bucle
+                es_patente_valida = True  
             else:
                 print("Error: La patente debe tener el formato 'AB 123 CD'.")
 
@@ -202,8 +231,10 @@ def mostrar_datos_camiones(camiones):
 
 def menu_principal():
     """Muestra el menú principal y ejecuta la acción seleccionada por el usuario."""
-    rutas = Rutas.copy() 
-    camiones = {}
+    # Intentar cargar rutas desde el archivo JSON al iniciar
+    rutas = cargar_rutas_json()
+
+    camiones = {}  # Asumiendo que esta función está definida
     matriz_rutas = []
     continuar = True  
 
@@ -222,6 +253,7 @@ def menu_principal():
 
         if opcion == '1':
             rutas = gestionar_rutas(rutas)
+
         elif opcion == '2':
             camiones = cargar_datos_camiones()
         elif opcion == '3':
@@ -260,5 +292,3 @@ def menu_principal():
 
 # Programa principal
 menu_principal()
-
-
