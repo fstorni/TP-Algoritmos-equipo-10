@@ -1,20 +1,20 @@
 import re
 import json 
 
-# Diccionario iniciales
+# Diccionario iniciales 
 Rutas = {
     'ruta1': {'origen': 'Buenos Aires', 'destino': 'Mendoza'},
     'ruta2': {'origen': 'Buenos Aires', 'destino': 'Córdoba'},
     'ruta3': {'origen': 'Buenos Aires', 'destino': 'Entre Ríos'}
 }
 
-Almacen = {
+Materiales = {
     "arena": 100,
     "ladrillos": 200,
     "tierra": 150
 }
 
-## Archivos json
+# Archivos json
 def guardar_rutas_json(rutas, archivo='rutas.json'):
     try:
         with open(archivo, 'w', encoding='utf-8') as file:
@@ -136,12 +136,47 @@ def cargar_datos_camiones(camiones):
         continuar = input("¿Desea ingresar otro camión? (s/n): ").lower()
         bandera = continuar != 'n'
     
-    return camiones  # Devolver el diccionario actualizado con los camiones ingresados
+    return camiones  # Devuelve el diccionario actualizado con los camiones ingresados
+
+def verificar_rutas_duplicadas(camiones):
+    """Verifica si hay camiones con rutas duplicadas en el mismo día."""
+    rutas_duplicadas = {}
+    
+    for camion in camiones.values():
+        for dia, ruta in camion['rutas'].items():
+            if ruta != "Sin viaje":  
+                if ruta not in rutas_duplicadas:
+                    rutas_duplicadas[ruta] = []
+                rutas_duplicadas[ruta].append((camion['patente'], dia))
+    
+    # Filtrar rutas duplicadas
+    rutas_duplicadas = {ruta: dias for ruta, dias in rutas_duplicadas.items() if len(dias) > 1}
+    
+    return rutas_duplicadas
+
+
+def manejar_rutas_duplicadas(rutas_duplicadas, camiones):
+    """Maneja las rutas duplicadas pidiendo al usuario que modifique las rutas."""
+    for ruta, camiones_con_ruta in rutas_duplicadas.items():
+        print(f"\n¡ALERTA! La ruta {ruta} está asignada a los siguientes camiones en los siguientes días:")
+        for patente, dia in camiones_con_ruta:
+            print(f"  - Camión {patente} en {dia}")
+        
+        cambiar = input("¿Desea cambiar alguna ruta asignada a esta ruta? (s/n): ").lower()
+        if cambiar == 's':
+            for patente, dia in camiones_con_ruta:
+                print(f"\nCamión {patente} tiene la ruta {ruta} asignada el día {dia}.")
+                nueva_ruta = input(f"¿Qué ruta desea asignar a este camión? (deje vacío para no cambiar): ").strip()
+                if nueva_ruta:
+                    camiones[patente]['rutas'][dia] = nueva_ruta
+                    print(f"La ruta para el camión {patente} en {dia} ha sido cambiada a {nueva_ruta}.")
+    
+    return camiones
 
 def cargar_rutas(camiones, rutas_disponibles):
-    """Carga las rutas para cada camión para cada día de la semana."""
+    """Carga las rutas para cada camión para cada día de la semana y verifica rutas duplicadas."""
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
-
+    
     for codigo_camion, datos_camion in camiones.items(): 
         print(f"\nCargando rutas para el camión {codigo_camion} ({datos_camion['nombre_transportista']}):")
 
@@ -151,7 +186,15 @@ def cargar_rutas(camiones, rutas_disponibles):
                 datos_camion['rutas'][dia] = ruta if ruta else "Sin viaje"
             else:
                 print(f"La ruta {ruta} no es válida.")
+    
+    rutas_duplicadas = verificar_rutas_duplicadas(camiones)
+    if rutas_duplicadas:
+        camiones = manejar_rutas_duplicadas(rutas_duplicadas, camiones)
+    else:
+        print("No se encontraron rutas duplicadas.")
+    
     return camiones
+
 
 def gestionar_stock(camiones, stock_actual):
     """Calcula el total de material transportado y verifica si hay faltante para los próximos viajes."""
