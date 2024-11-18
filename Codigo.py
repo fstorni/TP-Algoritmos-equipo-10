@@ -2,17 +2,19 @@ import re
 import json 
 
 # Diccionario iniciales 
-Rutas = {
+rutas = {
     'ruta1': {'origen': 'Buenos Aires', 'destino': 'Mendoza'},
     'ruta2': {'origen': 'Buenos Aires', 'destino': 'Córdoba'},
     'ruta3': {'origen': 'Buenos Aires', 'destino': 'Entre Ríos'}
 }
 
-Materiales = {
+materiales = {
     "arena": 100,
     "ladrillos": 200,
-    "tierra": 150
+    "tierra": 150,
+    "piedras": 100,
 }
+
 
 # Archivos json
 def guardar_rutas_json(rutas, archivo='rutas.json'):
@@ -31,13 +33,13 @@ def cargar_rutas_json(archivo='rutas.json'):
         return rutas
     except FileNotFoundError:
         print(f"No se encontró el archivo {archivo}. Se usará el diccionario de rutas predeterminado.")
-        return Rutas
+        return rutas
     except json.JSONDecodeError:
         print("Error: El archivo JSON está corrupto o malformado.")
-        return Rutas
+        return rutas
     except Exception as e:
         print(f"Error al cargar las rutas: {e}")
-        return Rutas
+        return rutas
 
 def guardar_camiones_json(camiones, archivo='camiones.json'):
     try:
@@ -85,7 +87,6 @@ def guardar_materiales(materiales, archivo='materiales.json'):
 
 def cargar_datos_camiones(camiones):
     """Carga datos de los camiones en un diccionario."""
-    
     bandera = True
     while bandera:
         # Validar el formato de la patente
@@ -195,7 +196,6 @@ def cargar_rutas(camiones, rutas_disponibles):
     
     return camiones
 
-
 def gestionar_stock(camiones, stock_actual):
     """Calcula el total de material transportado y verifica si hay faltante para los próximos viajes."""
     for camion in camiones.values():
@@ -218,7 +218,33 @@ def gestionar_stock(camiones, stock_actual):
 
     stock_total = sum(stock_actual.values())
     print(f"Stock actualizado: {stock_actual}")
-    return stock_actual
+    guardar_materiales(materiales)
+    
+    return materiales
+
+def agregar_material():
+    material = input("Ingrese el nombre del material a agregar: ").lower()
+    cantidad = int(input(f"Ingrese la cantidad de {material} a agregar: "))
+    
+    # Verificamos si el material ya existe
+    if material in materiales:
+        materiales[material] += cantidad
+        print(f"Se agregaron {cantidad} unidades de {material}. Nuevo stock: {materiales[material]}")
+    else:
+        materiales[material] = cantidad
+        print(f"Se agregó un nuevo material: {material}. Stock inicial: {cantidad}")
+
+# Función para modificar el stock de un material existente
+def modificar_stock():
+    material = input("Ingrese el nombre del material a modificar: ").lower()
+    
+    if material in materiales:
+        cantidad = int(input(f"Ingrese la nueva cantidad para {material}: "))
+        materiales[material] = cantidad
+        print(f"El stock de {material} ha sido actualizado a {cantidad}.")
+    else:
+        print(f"El material {material} no existe en el inventario.")
+
 
 def mostrar_datos_camiones(camiones):
     """Muestra todos los datos de los camiones en formato de tabla."""
@@ -317,6 +343,7 @@ def menu_principal():
         elif opcion == '6':
             guardar_rutas_json(rutas)
             guardar_camiones_json(camiones)
+            guardar_materiales(materiales)
             print("Saliendo del sistema. ¡Adiós!")
             continuar = False
         else:
