@@ -1,1 +1,7 @@
-
+{
+    "arena": 1300,
+    "ladrillos": 300,
+    "tierra": 150,
+    "piedras": 200,
+    "cemento": 1000
+}
