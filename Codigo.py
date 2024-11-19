@@ -15,7 +15,8 @@ materiales = {
     "piedras": 100,
 }
 
-#Archivos json
+
+# Archivos json
 def guardar_rutas_json(rutas, archivo='rutas.json'):
     try:
         with open(archivo, 'w', encoding='utf-8') as file:
@@ -221,34 +222,58 @@ def gestionar_stock(camiones, stock_actual):
     
     return materiales
 
-def agregar_material(materiales):
-    material = input("Ingrese el nombre del nuevo material: ")
-    cantidad = input(f"Ingrese la cantidad inicial de {material}: ")
-    materiales[material] = int(cantidad)
-    print(f"Material '{material}' agregado con {cantidad} unidades.")
+def gestionar_materiales(materiales):
+    """Permite al usuario gestionar los materiales disponibles."""
+    continuar = True
+    while continuar:
+        print("\n--- Gestión de Materiales ---")
+        print("1. Mostrar materiales actuales")
+        print("2. Agregar nuevo material")
+        print("3. Modificar cantidad de material existente")
+        print("4. Eliminar material")
+        print("5. Volver al menú principal")
 
-def modificar_material(materiales):
-    material = input("Ingrese el nombre del material a modificar: ")
-    if material in materiales:
-        nueva_cantidad = input(f"Ingrese la nueva cantidad para {material}: ")
-        materiales[material] = int(nueva_cantidad)
-        print(f"Material '{material}' actualizado a {nueva_cantidad} unidades.")
-    else:
-        print(f"El material '{material}' no existe.")
+        opcion = input("Seleccione una opción (1-5): ")
 
-def eliminar_material(materiales):
-    material = input("Ingrese el nombre del material a eliminar: ")
-    if material in materiales:
-        confirmacion = input(f"¿Está seguro de eliminar '{material}'? (s/n): ").lower()
-        if confirmacion == 's':
-            del materiales[material]
-            print(f"Material '{material}' eliminado.")
-        elif confirmacion == 'n':
-            print("Eliminación cancelada.")
+        if opcion == '1':
+            print("\nMateriales actuales:")
+            for nombre, cantidad in materiales.items():
+                print(f"{nombre}: {cantidad} unidades")
+        elif opcion == '2':
+            nombre = input("Ingrese el nombre del nuevo material: ").strip().lower()
+            cantidad = int(input("Ingrese la cantidad del nuevo material: ").strip())
+            if nombre not in materiales:
+                materiales[nombre] = cantidad
+                print(f"Material {nombre} agregado correctamente con {cantidad} unidades.")
+            else:
+                print("Error: El material ya existe.")
+        elif opcion == '3':
+            nombre = input("Ingrese el nombre del material a modificar: ").strip().lower()
+            if nombre in materiales:
+                cantidad = int(input(f"Ingrese la nueva cantidad de {nombre}: ").strip())
+                materiales[nombre] = cantidad
+                print(f"Cantidad de {nombre} modificada correctamente.")
+            else:
+                print("Error: El material no existe.")
+        elif opcion == '4':
+            nombre = input("Ingrese el nombre del material a eliminar: ").strip().lower()
+            if nombre in materiales:
+                confirmacion = input(f"¿Está seguro de eliminar el material {nombre}? (s/n): ").lower()
+                if confirmacion == 's':
+                    del materiales[nombre]
+                    print(f"Material {nombre} eliminado correctamente.")
+                else:
+                    print("Eliminación cancelada.")
+            else:
+                print("Error: El material no existe.")
+
+        elif opcion == '5':
+            continuar = False
         else:
-            print("Opción no válida, regresando al menú.")
-    else:
-        print(f"El material '{material}' no existe.")
+            print("Opción no válida. Por favor, intente de nuevo.")
+    
+    return materiales
+
 
 def mostrar_datos_camiones(camiones):
     """Muestra todos los datos de los camiones en formato de tabla."""
@@ -297,10 +322,12 @@ def gestionar_rutas(rutas):
         elif opcion == '4':
             codigo = input("Ingrese el código de la ruta a eliminar: ").strip().lower()
             if codigo in rutas:
-                del rutas[codigo]
-                print(f"Ruta {codigo} eliminada correctamente.")
-            else:
-                print("Error: El código de ruta no existe.")
+                    confirmacion = input(f"¿Está seguro de eliminar la ruta {codigo}? (s/n): ").lower()
+                    if confirmacion == 's':
+                        del rutas[codigo]
+                        print(f"Ruta {codigo} eliminada correctamente.")
+                    else:
+                        print("Eliminación cancelada.")
         elif opcion == '5':
             continuar = False
         else:
@@ -311,6 +338,7 @@ def menu_principal():
     rutas = cargar_rutas_json()
     camiones = cargar_camiones_json()
     materiales = cargar_materiales()
+    
 
     continuar = True
 
@@ -335,31 +363,13 @@ def menu_principal():
             camiones = cargar_rutas(camiones, rutas)
             guardar_camiones_json(camiones)  
         elif opcion == '4':
-            print("\n--- Gestión de Materiales ---")
-            print("1. Agregar material")
-            print("2. Modificar stock de material existente")
-            print("3. Eliminar material")
-            print("4. Verificar stock")
-            print("5. Volver al menú principal")
-            opcion_materiales = input("Seleccione una opción (1-5): ")
-
-            if opcion_materiales == '1':
-                agregar_material(materiales)
-            elif opcion_materiales == '2':
-                modificar_material(materiales)
-            elif opcion_materiales == '3':
-                eliminar_material(materiales)
-            elif opcion_materiales == '4':
-                gestionar_stock(camiones)
-            elif opcion_materiales == '5':
-                continue
-            else:
-                print("Opción no válida.")
+            materiales = gestionar_materiales(materiales)
+            guardar_materiales(materiales)    
         elif opcion == '5':
             mostrar_datos_camiones(camiones)
         elif opcion == '6':
             print("Saliendo del programa.")
-            guardar_rutas_json(rutas)
+            guardar_rutas_json(rutas)  
             guardar_camiones_json(camiones)
             guardar_materiales(materiales)
             continuar = False
