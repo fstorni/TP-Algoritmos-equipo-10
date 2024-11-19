@@ -258,12 +258,8 @@ def gestionar_materiales(materiales):
         elif opcion == '4':
             nombre = input("Ingrese el nombre del material a eliminar: ").strip().lower()
             if nombre in materiales:
-                confirmacion = input(f"¿Está seguro de eliminar el material {nombre}? (s/n): ").lower()
-                if confirmacion == 's':
-                    del materiales[nombre]
-                    print(f"Material {nombre} eliminado correctamente.")
-                else:
-                    print("Eliminación cancelada.")
+                del materiales[nombre]
+                print(f"Material {nombre} eliminado correctamente.")
             else:
                 print("Error: El material no existe.")
 
@@ -322,12 +318,9 @@ def gestionar_rutas(rutas):
         elif opcion == '4':
             codigo = input("Ingrese el código de la ruta a eliminar: ").strip().lower()
             if codigo in rutas:
-                    confirmacion = input(f"¿Está seguro de eliminar la ruta {codigo}? (s/n): ").lower()
-                    if confirmacion == 's':
-                        del rutas[codigo]
-                        print(f"Ruta {codigo} eliminada correctamente.")
-                    else:
-                        print("Eliminación cancelada.")
+                del rutas[codigo]
+            else:
+                print("Error: El código de ruta no existe.")
         elif opcion == '5':
             continuar = False
         else:
@@ -368,7 +361,7 @@ def menu_principal():
         elif opcion == '5':
             mostrar_datos_camiones(camiones)
         elif opcion == '6':
-            print("Saliendo del programa.")
+            print("Saliendo del programa. ¡Hasta luego!")
             guardar_rutas_json(rutas)  
             guardar_camiones_json(camiones)
             guardar_materiales(materiales)
