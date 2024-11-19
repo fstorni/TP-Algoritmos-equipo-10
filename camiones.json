@@ -1,1 +1,46 @@
-
+{
+    "DD 432 DS": {
+        "patente": "DD 432 DS",
+        "nombre_transportista": "jorge",
+        "material": "arena",
+        "cantidad": 100,
+        "tipo_viaje": "carga",
+        "rutas": {
+            "Lunes": "Sin viaje",
+            "Martes": "Sin viaje",
+            "Miércoles": "Sin viaje",
+            "Jueves": "Sin viaje",
+            "Viernes": "Sin viaje"
+        }
+    },
+   
+    "KK 433 RO": {
+        "patente": "KK 433 RO",
+        "nombre_transportista": "carlos",
+        "material": "arena",
+        "cantidad": 1000,
+        "tipo_viaje": "carga",
+        "rutas": {
+            "Lunes": "Sin viaje",
+            "Martes": "Sin viaje",
+            "Miércoles": "Sin viaje",
+            "Jueves": "Sin viaje",
+            "Viernes": "Sin viaje"
+        }
+    },
+    
+    "DD 333 EE": {
+        "patente": "DD 333 EE",
+        "nombre_transportista": "rosa",
+        "material": "ladrillos",
+        "cantidad": 100,
+        "tipo_viaje": "carga",
+        "rutas": {
+            "Lunes": "Sin viaje",
+            "Martes": "Sin viaje",
+            "Miércoles": "Sin viaje",
+            "Jueves": "Sin viaje",
+            "Viernes": "Sin viaje"
+        }
+    }
+}
