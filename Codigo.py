@@ -15,8 +15,7 @@ materiales = {
     "piedras": 100,
 }
 
-
-# Archivos json
+#Archivos json
 def guardar_rutas_json(rutas, archivo='rutas.json'):
     try:
         with open(archivo, 'w', encoding='utf-8') as file:
@@ -222,29 +221,34 @@ def gestionar_stock(camiones, stock_actual):
     
     return materiales
 
-def agregar_material():
-    material = input("Ingrese el nombre del material a agregar: ").lower()
-    cantidad = int(input(f"Ingrese la cantidad de {material} a agregar: "))
-    
-    # Verificamos si el material ya existe
-    if material in materiales:
-        materiales[material] += cantidad
-        print(f"Se agregaron {cantidad} unidades de {material}. Nuevo stock: {materiales[material]}")
-    else:
-        materiales[material] = cantidad
-        print(f"Se agregó un nuevo material: {material}. Stock inicial: {cantidad}")
+def agregar_material(materiales):
+    material = input("Ingrese el nombre del nuevo material: ")
+    cantidad = input(f"Ingrese la cantidad inicial de {material}: ")
+    materiales[material] = int(cantidad)
+    print(f"Material '{material}' agregado con {cantidad} unidades.")
 
-# Función para modificar el stock de un material existente
-def modificar_stock():
-    material = input("Ingrese el nombre del material a modificar: ").lower()
-    
+def modificar_material(materiales):
+    material = input("Ingrese el nombre del material a modificar: ")
     if material in materiales:
-        cantidad = int(input(f"Ingrese la nueva cantidad para {material}: "))
-        materiales[material] = cantidad
-        print(f"El stock de {material} ha sido actualizado a {cantidad}.")
+        nueva_cantidad = input(f"Ingrese la nueva cantidad para {material}: ")
+        materiales[material] = int(nueva_cantidad)
+        print(f"Material '{material}' actualizado a {nueva_cantidad} unidades.")
     else:
-        print(f"El material {material} no existe en el inventario.")
+        print(f"El material '{material}' no existe.")
 
+def eliminar_material(materiales):
+    material = input("Ingrese el nombre del material a eliminar: ")
+    if material in materiales:
+        confirmacion = input(f"¿Está seguro de eliminar '{material}'? (s/n): ").lower()
+        if confirmacion == 's':
+            del materiales[material]
+            print(f"Material '{material}' eliminado.")
+        elif confirmacion == 'n':
+            print("Eliminación cancelada.")
+        else:
+            print("Opción no válida, regresando al menú.")
+    else:
+        print(f"El material '{material}' no existe.")
 
 def mostrar_datos_camiones(camiones):
     """Muestra todos los datos de los camiones en formato de tabla."""
@@ -315,38 +319,52 @@ def menu_principal():
         print("1. Gestionar rutas")
         print("2. Cargar datos de camiones")
         print("3. Cargar rutas para camiones")
-        print("4. Mostrar datos de camiones")
-        print("5. Gestionar stock")
+        print("4. Gestionar stock de materiales")
+        print("5. Mostrar datos de los camiones")
         print("6. Salir")
-        
+
         opcion = input("Seleccione una opción (1-6): ")
 
         if opcion == '1':
             rutas = gestionar_rutas(rutas)
+            guardar_rutas_json(rutas) 
         elif opcion == '2':
             camiones = cargar_datos_camiones(camiones)
+            guardar_camiones_json(camiones)  
         elif opcion == '3':
-            if camiones:
-                camiones = cargar_rutas(camiones, rutas)
-            else:
-                print("Primero debe cargar los datos de los camiones.")
+            camiones = cargar_rutas(camiones, rutas)
+            guardar_camiones_json(camiones)  
         elif opcion == '4':
-            if camiones:
-                mostrar_datos_camiones(camiones)
+            print("\n--- Gestión de Materiales ---")
+            print("1. Agregar material")
+            print("2. Modificar stock de material existente")
+            print("3. Eliminar material")
+            print("4. Verificar stock")
+            print("5. Volver al menú principal")
+            opcion_materiales = input("Seleccione una opción (1-5): ")
+
+            if opcion_materiales == '1':
+                agregar_material(materiales)
+            elif opcion_materiales == '2':
+                modificar_material(materiales)
+            elif opcion_materiales == '3':
+                eliminar_material(materiales)
+            elif opcion_materiales == '4':
+                gestionar_stock(camiones)
+            elif opcion_materiales == '5':
+                continue
             else:
-                print("Primero debe cargar los datos de los camiones.")
+                print("Opción no válida.")
         elif opcion == '5':
-            if camiones:
-                gestionar_stock(camiones, materiales)
-            else:
-                print("Primero debe cargar los datos de los camiones.")
+            mostrar_datos_camiones(camiones)
         elif opcion == '6':
+            print("Saliendo del programa.")
             guardar_rutas_json(rutas)
             guardar_camiones_json(camiones)
             guardar_materiales(materiales)
-            print("Saliendo del sistema. ¡Adiós!")
             continuar = False
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
 
-menu_principal()
+
+menu_principal() 
