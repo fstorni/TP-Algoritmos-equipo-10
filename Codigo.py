@@ -86,58 +86,130 @@ def guardar_materiales(materiales, archivo='materiales.json'):
         print(f"Error al guardar los materiales: {e}")
 
 def cargar_datos_camiones(camiones):
-    """Carga datos de los camiones en un diccionario."""
-    bandera = True
-    while bandera:
-        # Validar el formato de la patente
-        es_patente_valida = False
-        while not es_patente_valida:
-            patente_camion = input("Ingrese la patente del camión (formato 'AB 123 CD'): ").strip().upper()
-            if re.match(r"^[A-Z]{2} \d{3} [A-Z]{2}$", patente_camion):
-                es_patente_valida = True  
-            else:
-                print("Error: La patente debe tener el formato 'AB 123 CD'.")
+    """Permite al usuario gestionar los camiones disponibles."""
+    continuar = True
+    while continuar:
+        print("\n--- Gestión de Camiones ---")
+        print("1. Mostrar camiones actuales")
+        print("2. Agregar nuevo camión")
+        print("3. Modificar datos de camión existente")
+        print("4. Eliminar camión")
+        print("5. Volver al menú principal")
 
-        nombre_transportista = input("Ingrese el nombre del transportista: ")
-        material_transportar = input("Ingrese el material a transportar: ")
-        while not material_transportar.isalpha():
-            print("Error: El material debe ser una cadena de caracteres.")
+        opcion = input("Seleccione una opción (1-5): ")
+
+        if opcion == '1':
+            print("\nCamiones actuales:")
+            for patente, datos in camiones.items():
+                print(f"{patente}: Transportista - {datos['nombre_transportista']}, Material - {datos['material']}, Cantidad - {datos['cantidad']} kg, Tipo de Viaje - {datos['tipo_viaje']}")
+        elif opcion == '2':
+            # Validar el formato de la patente
+            es_patente_valida = False
+            while not es_patente_valida:
+                patente_camion = input("Ingrese la patente del camión (formato 'AA456DD'): ").strip().upper()
+                if validar_patente(patente_camion):
+                    es_patente_valida = True  
+                else:
+                    print("Error: La patente debe tener el formato 'AA456DD'.")
+
+            nombre_transportista = input("Ingrese el nombre del transportista: ")
             material_transportar = input("Ingrese el material a transportar: ")
+            while not material_transportar.isalpha():
+                print("Error: El material debe ser una cadena de caracteres.")
+                material_transportar = input("Ingrese el material a transportar: ")
 
-        # Validar cantidad de material
-        cantidad_material = -1  
-        while cantidad_material <= 0:
-            try:
-                cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
-                if cantidad_material <= 0:
-                    print("Error: La cantidad a transportar debe ser un número positivo.")
-            except ValueError:
-                print("Error: Debe ingresar un número válido (solo números positivos).")
+            # Validar cantidad de material
+            cantidad_material = -1  
+            while cantidad_material <= 0:
+                try:
+                    cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
+                    if cantidad_material <= 0:
+                        print("Error: La cantidad a transportar debe ser un número positivo.")
+                except ValueError:
+                    print("Error: Debe ingresar un número válido (solo números positivos).")
 
-        tipo_viaje = input("Ingrese el tipo de viaje ('carga'(c) o 'descarga'(d)): ").strip().lower()
-        while tipo_viaje not in ['carga', 'descarga', 'c', 'd']:
-            print("Error: Tipo de viaje no válido. Debe ser 'carga', 'descarga', 'c' o 'd'.")
-            tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
+            tipo_viaje = input("Ingrese el tipo de viaje ('carga'(c) o 'descarga'(d)): ").strip().lower()
+            while tipo_viaje not in ['carga', 'descarga', 'c', 'd']:
+                print("Error: Tipo de viaje no válido. Debe ser 'carga', 'descarga', 'c' o 'd'.")
+                tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
 
-        # Convertir 'c' y 'd' a 'carga' y 'descarga'
-        if tipo_viaje == 'c':
-            tipo_viaje = 'carga'
-        elif tipo_viaje == 'd':
-            tipo_viaje = 'descarga'
+            # Convertir 'c' y 'd' a 'carga' y 'descarga'
+            if tipo_viaje == 'c':
+                tipo_viaje = 'carga'
+            elif tipo_viaje == 'd':
+                tipo_viaje = 'descarga'
 
-        camiones[patente_camion] = {
-            'patente': patente_camion,
-            'nombre_transportista': nombre_transportista,
-            'material': material_transportar,
-            'cantidad': cantidad_material,
-            'tipo_viaje': tipo_viaje,
-            'rutas': {}
-        }
+            camiones[patente_camion] = {
+                'patente': patente_camion,
+                'nombre_transportista': nombre_transportista,
+                'material': material_transportar,
+                'cantidad': cantidad_material,
+                'tipo_viaje': tipo_viaje,
+                'rutas': {}
+            }
+            print(f"Camión {patente_camion} agregado correctamente.")
+        
+        elif opcion == '3':
+            patente_camion = input("Ingrese la patente del camión a modificar: ").strip().upper()
+            if patente_camion in camiones:
+                nombre_transportista = input(f"Ingrese el nuevo nombre del transportista (actual: {camiones[patente_camion]['nombre_transportista']}): ")
+                material_transportar = input(f"Ingrese el nuevo material a transportar (actual: {camiones[patente_camion]['material']}): ")
+                while not material_transportar.isalpha():
+                    print("Error: El material debe ser una cadena de caracteres.")
+                    material_transportar = input("Ingrese el material a transportar: ")
 
-        continuar = input("¿Desea ingresar otro camión? (s/n): ").lower()
-        bandera = continuar != 'n'
+                # Validar cantidad de material
+                cantidad_material = -1  
+                while cantidad_material <= 0:
+                    try:
+                        cantidad_material = int(input(f"Cuántos kg se van a transportar de ese material? (actual: {camiones[patente_camion]['cantidad']} kg): "))
+                        if cantidad_material <= 0:
+                            print("Error: La cantidad a transportar debe ser un número positivo.")
+                    except ValueError:
+                        print("Error: Debe ingresar un número válido (solo números positivos).")
+
+                tipo_viaje = input(f"Ingrese el tipo de viaje ('carga'(c) o 'descarga'(d)) (actual: {camiones[patente_camion]['tipo_viaje']}): ").strip().lower()
+                while tipo_viaje not in ['carga', 'descarga', 'c', 'd']:
+                    print("Error: Tipo de viaje no válido. Debe ser 'carga', 'descarga', 'c' o 'd'.")
+                    tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
+
+                # Convertir 'c' y 'd' a 'carga' y 'descarga'
+                if tipo_viaje == 'c':
+                    tipo_viaje = 'carga'
+                elif tipo_viaje == 'd':
+                    tipo_viaje = 'descarga'
+
+                camiones[patente_camion] = {
+                    'patente': patente_camion,
+                    'nombre_transportista': nombre_transportista,
+                    'material': material_transportar,
+                    'cantidad': cantidad_material,
+                    'tipo_viaje': tipo_viaje,
+                    'rutas': camiones[patente_camion]['rutas']  # mantener las rutas existentes
+                }
+                print(f"Camión {patente_camion} modificado correctamente.")
+            else:
+                print("Error: La patente ingresada no corresponde a ningún camión registrado.")
+
+        elif opcion == '4':
+            patente_camion = input("Ingrese la patente del camión a eliminar: ").strip().upper()
+            if patente_camion in camiones:
+                confirmar = input(f"¿Está seguro de que desea eliminar el camión con patente {patente_camion}? (s/n): ").strip().lower()
+                if confirmar == 's':
+                    del camiones[patente_camion]
+                    print(f"Camión con patente {patente_camion} eliminado correctamente.")
+                else:
+                    print("Eliminación cancelada.")
+            else:
+                print("Error: La patente ingresada no corresponde a ningún camión registrado.")
+            
+        elif opcion == '5':
+            continuar = False
+        else:
+            print("Opción no válida. Por favor, intente de nuevo.")
     
-    return camiones  # Devuelve el diccionario actualizado con los camiones ingresados
+    return camiones
+
 
 def verificar_rutas_duplicadas(camiones):
     """Verifica si hay camiones con rutas duplicadas en el mismo día."""
@@ -222,53 +294,7 @@ def gestionar_stock(camiones, stock_actual):
     
     return materiales
 
-def gestionar_materiales(materiales):
-    """Permite al usuario gestionar los materiales disponibles."""
-    continuar = True
-    while continuar:
-        print("\n--- Gestión de Materiales ---")
-        print("1. Mostrar materiales actuales")
-        print("2. Agregar nuevo material")
-        print("3. Modificar cantidad de material existente")
-        print("4. Eliminar material")
-        print("5. Volver al menú principal")
 
-        opcion = input("Seleccione una opción (1-5): ")
-
-        if opcion == '1':
-            print("\nMateriales actuales:")
-            for nombre, cantidad in materiales.items():
-                print(f"{nombre}: {cantidad} unidades")
-        elif opcion == '2':
-            nombre = input("Ingrese el nombre del nuevo material: ").strip().lower()
-            cantidad = int(input("Ingrese la cantidad del nuevo material: ").strip())
-            if nombre not in materiales:
-                materiales[nombre] = cantidad
-                print(f"Material {nombre} agregado correctamente con {cantidad} unidades.")
-            else:
-                print("Error: El material ya existe.")
-        elif opcion == '3':
-            nombre = input("Ingrese el nombre del material a modificar: ").strip().lower()
-            if nombre in materiales:
-                cantidad = int(input(f"Ingrese la nueva cantidad de {nombre}: ").strip())
-                materiales[nombre] = cantidad
-                print(f"Cantidad de {nombre} modificada correctamente.")
-            else:
-                print("Error: El material no existe.")
-        elif opcion == '4':
-            nombre = input("Ingrese el nombre del material a eliminar: ").strip().lower()
-            if nombre in materiales:
-                del materiales[nombre]
-                print(f"Material {nombre} eliminado correctamente.")
-            else:
-                print("Error: El material no existe.")
-
-        elif opcion == '5':
-            continuar = False
-        else:
-            print("Opción no válida. Por favor, intente de nuevo.")
-    
-    return materiales
 
 
 def mostrar_datos_camiones(camiones):
@@ -280,94 +306,117 @@ def mostrar_datos_camiones(camiones):
     for camion in camiones.values():
         print(f"{camion['patente']:<15} {camion['nombre_transportista']:<20} {camion['material']:<15} {camion['cantidad']:<15} {camion['tipo_viaje']:<15}")
 
-def gestionar_rutas(rutas):
-    """Permite al usuario gestionar las rutas disponibles."""
-    continuar = True
-    while continuar:
-        print("\n--- Gestión de Rutas ---")
-        print("1. Mostrar rutas actuales")
-        print("2. Agregar nueva ruta")
-        print("3. Modificar ruta existente")
-        print("4. Eliminar ruta")
-        print("5. Volver al menú principal")
+def gestionar_rutas(rutas): 
+    """Permite al usuario gestionar las rutas disponibles.""" 
+    continuar = True 
+    while continuar: 
+        print("\n--- Gestión de Rutas ---") 
+        print("1. Mostrar rutas actuales") 
+        print("2. Agregar nueva ruta") 
+        print("3. Modificar ruta existente") 
+        print("4. Eliminar ruta") 
+        print("5. Volver al menú principal") 
 
-        opcion = input("Seleccione una opción (1-5): ")
+        opcion = input("Seleccione una opción (1-5): ") 
 
-        if opcion == '1':
-            print("\nRutas actuales:")
-            for codigo, datos in rutas.items():
-                print(f"{codigo}: Origen - {datos['origen']}, Destino - {datos['destino']}")
-        elif opcion == '2':
-            codigo = input("Ingrese el código de la nueva ruta: ").strip().lower()
-            origen = input("Ingrese el origen de la nueva ruta: ").strip()
-            destino = input("Ingrese el destino de la nueva ruta: ").strip()
-            if codigo not in rutas:
-                rutas[codigo] = {'origen': origen, 'destino': destino}
-                print(f"Ruta {codigo} agregada correctamente.")
+        if opcion == '1': 
+            print("\nRutas actuales:") 
+            for codigo, datos in rutas.items(): 
+                print(f"{codigo}: Origen - {datos['origen']}, Destino - {datos['destino']}") 
+        elif opcion == '2': 
+            codigo = input("Ingrese el código de la nueva ruta: ").strip().lower() 
+            origen = input("Ingrese el origen de la nueva ruta: ").strip() 
+            destino = input("Ingrese el destino de la nueva ruta: ").strip() 
+            if codigo not in rutas: 
+                rutas[codigo] = {'origen': origen, 'destino': destino} 
+                print(f"Ruta {codigo} agregada correctamente.") 
+            else: 
+                print("Error: El código de ruta ya existe.") 
+        elif opcion == '3': 
+            codigo = input("Ingrese el código de la ruta a modificar: ").strip().lower() 
+            if codigo in rutas: 
+                origen = input("Ingrese el nuevo origen de la ruta: ").strip() 
+                destino = input("Ingrese el nuevo destino de la ruta: ").strip() 
+                rutas[codigo] = {'origen': origen, 'destino': destino} 
+                print(f"Ruta {codigo} modificada correctamente.") 
+            else: 
+                print("Error: El código de ruta no existe.") 
+        elif opcion == '4': 
+            codigo = input("Ingrese el código de la ruta a eliminar: ").strip().lower() 
+            if codigo in rutas: 
+                confirmar = input(f"¿Está seguro de que desea eliminar la ruta {codigo}? (s/n): ").strip().lower() 
+                if confirmar == 's':
+                     del rutas[codigo] 
+                     print(f"Ruta {codigo} eliminada correctamente.") 
+                else:
+                    print("Eliminación cancelada.") 
             else:
-                print("Error: El código de ruta ya existe.")
-        elif opcion == '3':
-            codigo = input("Ingrese el código de la ruta a modificar: ").strip().lower()
-            if codigo in rutas:
-                origen = input("Ingrese el nuevo origen de la ruta: ").strip()
-                destino = input("Ingrese el nuevo destino de la ruta: ").strip()
-                rutas[codigo] = {'origen': origen, 'destino': destino}
-                print(f"Ruta {codigo} modificada correctamente.")
-            else:
-                print("Error: El código de ruta no existe.")
-        elif opcion == '4':
-            codigo = input("Ingrese el código de la ruta a eliminar: ").strip().lower()
-            if codigo in rutas:
-                del rutas[codigo]
-            else:
-                print("Error: El código de ruta no existe.")
-        elif opcion == '5':
-            continuar = False
-        else:
-            print("Opción no válida. Por favor, intente de nuevo.")
-    return rutas
-
-def menu_principal():
-    rutas = cargar_rutas_json()
-    camiones = cargar_camiones_json()
-    materiales = cargar_materiales()
+                print("Error: El código de ruta no existe.") 
+        elif opcion == '5': 
+            continuar = False 
+        else: 
+            print("Opción no válida. Por favor, intente de nuevo.") 
+        return rutas
     
-
-    continuar = True
-
-    while continuar:
-        print("\n--- Menú Principal ---")
-        print("1. Gestionar rutas")
-        print("2. Cargar datos de camiones")
-        print("3. Cargar rutas para camiones")
-        print("4. Gestionar stock de materiales")
-        print("5. Mostrar datos de los camiones")
-        print("6. Salir")
-
-        opcion = input("Seleccione una opción (1-6): ")
-
-        if opcion == '1':
-            rutas = gestionar_rutas(rutas)
+def eliminar_camion(camiones): 
+    """Permite al usuario eliminar un camión.""" 
+    patente_camion = input("Ingrese la patente del camión a eliminar: ").strip().upper() 
+    if patente_camion in camiones: 
+        confirmar = input(f"¿Está seguro de que desea eliminar el camión con patente {patente_camion}? (s/n): ").strip().lower() 
+        if confirmar == 's': 
+            del camiones[patente_camion] 
+            print(f"Camión con patente {patente_camion} eliminado correctamente.") 
+        else: 
+            print("Eliminación cancelada.") 
+    else:
+        print("Error: La patente ingresada no corresponde a ningún camión registrado.") 
+    return camiones
+    
+def menu_principal(): 
+    rutas = cargar_rutas_json() 
+    camiones = cargar_camiones_json() 
+    materiales = cargar_materiales() 
+    continuar = True 
+    
+    while continuar: 
+        print("\n--- Menú Principal ---") 
+        print("1. Gestionar rutas") 
+        print("2. Gestionar camiones") 
+        print("3. Cargar rutas para camiones") 
+        print("4. Gestionar stock de materiales") 
+        print("5. Mostrar datos de los camiones") 
+        print("6. Salir") 
+        
+        opcion = input("Seleccione una opción (1-6): ") 
+        
+        if opcion == '1': 
+            rutas = gestionar_rutas(rutas) 
             guardar_rutas_json(rutas) 
-        elif opcion == '2':
-            camiones = cargar_datos_camiones(camiones)
-            guardar_camiones_json(camiones)  
-        elif opcion == '3':
-            camiones = cargar_rutas(camiones, rutas)
-            guardar_camiones_json(camiones)  
-        elif opcion == '4':
-            materiales = gestionar_materiales(materiales)
-            guardar_materiales(materiales)    
-        elif opcion == '5':
-            mostrar_datos_camiones(camiones)
-        elif opcion == '6':
-            print("Saliendo del programa. ¡Hasta luego!")
-            guardar_rutas_json(rutas)  
-            guardar_camiones_json(camiones)
-            guardar_materiales(materiales)
-            continuar = False
-        else:
-            print("Opción no válida. Por favor, intente de nuevo.")
+        
+        elif opcion == '2': 
+            camiones = cargar_datos_camiones(camiones) 
+            guardar_camiones_json(camiones) 
+        
+        elif opcion == '3': 
+            camiones = cargar_rutas(camiones, rutas) 
+            guardar_camiones_json(camiones) 
+        
+        elif opcion == '4': 
+            materiales = gestionar_materiales(materiales) 
+            guardar_materiales(materiales) 
+        
+        elif opcion == '5': 
+            mostrar_datos_camiones(camiones) 
+        
+        
+        elif opcion == '6': 
+            print("Saliendo del programa. ¡Hasta luego!") 
+            guardar_rutas_json(rutas) 
+            guardar_camiones_json(camiones) 
+            guardar_materiales(materiales) 
+        
+        else: 
+            print("Opción no válida. Por favor, intente de nuevo.") 
+            
 
-
-menu_principal() 
+menu_principal()
