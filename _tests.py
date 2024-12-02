@@ -28,7 +28,7 @@ def camiones():
     return {
         "AB 123 CD": {
             'patente': 'AB 123 CD',
-            'nombre_transportista': 'Juan Perez',
+            'nombre_transportista': 'Juan',
             'material': 'arena',
             'cantidad': 50,
             'tipo_viaje': 'carga',
@@ -73,7 +73,7 @@ def test_verificar_rutas_duplicadas():
     camiones = {
         "AB 123 CD": {
             'patente': 'AB 123 CD',
-            'nombre_transportista': 'Juan Perez',
+            'nombre_transportista': 'Juan',
             'material': 'arena',
             'cantidad': 50,
             'tipo_viaje': 'carga',
@@ -81,7 +81,7 @@ def test_verificar_rutas_duplicadas():
         },
         "EF 456 GH": {
             'patente': 'EF 456 GH',
-            'nombre_transportista': 'Carlos Lopez',
+            'nombre_transportista': 'Carlos',
             'material': 'ladrillos',
             'cantidad': 100,
             'tipo_viaje': 'carga',
