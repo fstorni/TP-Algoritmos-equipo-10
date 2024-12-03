@@ -165,6 +165,8 @@ def cargar_datos_camiones(camiones, opcion):
         }
         print(f" Camión con patente {patente_camion} agregado correctamente.")
 
+        continuar_cargando = input("¿Desea seguir cargando datos de camiones? (s/n): ").strip().lower()
+        return camiones
 
     elif opcion == '3':
         print("\n--- Modificar Camión Existente ---")
