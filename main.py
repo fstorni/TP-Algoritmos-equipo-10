@@ -40,26 +40,26 @@ def cargar_rutas_json(archivo='rutas.json'):
         print(f"Error al cargar las rutas: {e}")
         return rutas
 
-def guardar_camiones_json(camiones, archivo='camiones.json'):
-    try:
-        with open(archivo, 'w', encoding='utf-8') as file:
-            json.dump(camiones, file, indent=4, ensure_ascii=False)
-        print(f"Datos de camiones guardados en {archivo}.")
-    except Exception as e:
-        print(f"Error al guardar los datos de camiones: {e}")
-
-def cargar_camiones_json(archivo='camiones.json'):
-    try:
-        with open(archivo, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        print(f"Archivo {archivo} no encontrado. Iniciando con datos vacíos.")
-        return {}
-    except json.JSONDecodeError:
-        print("Error: Archivo JSON malformado.")
-        return {}
-    except Exception as e:
-        print(f"Error al cargar los datos de camiones: {e}")
+def guardar_camiones_json(camiones, archivo='camiones.json'): 
+    try: 
+        with open(archivo, 'w', encoding='utf-8') as file: 
+            json.dump(camiones, file, indent=4, ensure_ascii=False) 
+        print(f"Datos de camiones guardados en {archivo}.") 
+    except Exception as e: 
+        print(f"Error al guardar los datos de camiones: {e}") 
+        
+def cargar_camiones_json(archivo='camiones.json'): 
+    try: 
+        with open(archivo, 'r', encoding='utf-8') as file: 
+            return json.load(file) 
+    except FileNotFoundError: 
+        print(f"Archivo {archivo} no encontrado. Iniciando con datos vacíos.") 
+        return {} 
+    except json.JSONDecodeError: 
+        print("Error: Archivo JSON malformado.") 
+        return {} 
+    except Exception as e: 
+        print(f"Error al cargar los datos de camiones: {e}") 
         return {}
 
 def cargar_materiales(archivo='materiales.json'):
@@ -84,6 +84,7 @@ def guardar_materiales(materiales, archivo='materiales.json'):
     except Exception as e:
         print(f"Error al guardar los materiales: {e}")
 
+
 import re
 
 def cargar_datos_camiones(camiones, opcion):
@@ -101,13 +102,13 @@ def cargar_datos_camiones(camiones, opcion):
     elif opcion == '2':
         # Agregar camión nuevo
         print("\n--- Agregar Nuevo Camión ---")
-        agregar_camion = True  
+        agregar_camion = True
         while agregar_camion:
             patente_camion = input("Ingrese la patente del camión (formato 'AB123CD') o ingrese -1 para volver: ").strip().upper()
             if patente_camion == '-1':
-                return camiones  
+                return camiones
+            # Eliminar espacios antes de la validación
             patente_camion = re.sub(r"\s+", "", patente_camion)
-    
             # Validar formato de patente
             if re.match(r"^[A-Z]{2}\d{3}[A-Z]{2}$", patente_camion):
                 # Verificar si ya existe la patente
@@ -115,42 +116,34 @@ def cargar_datos_camiones(camiones, opcion):
                     print("Error: Ya existe un camión con esta patente. Intente nuevamente.")
                 else:
                     print(f"Patente '{patente_camion}' registrada correctamente.")
-                    agregar_camion = False  
+                    agregar_camion = False  # Salir del ciclo si la patente es válida y no duplicada
             else:
                 print("Error: La patente debe tener el formato 'AB123CD' sin espacios. Intente nuevamente.")
-
-        nombre_transportista = input("Ingrese el nombre del transportista o ingrese -1 para volver: ").strip()
-        if nombre_transportista == '-1':
-            return camiones  
+        
+        nombre_transportista = input("Ingrese el nombre del transportista: ").strip()
         while not nombre_transportista.isalpha():
-            print(" Error: El nombre debe ser solo letras.")
+            print("Error: El nombre debe ser solo letras.")
             nombre_transportista = input("Ingrese el nombre del transportista: ").strip()
 
-        material_transportar = input("Ingrese el material a transportar o ingrese -1 para volver: ").strip()
-        if material_transportar == '-1':
-            return camiones  
+        material_transportar = input("Ingrese el material a transportar: ").strip()
         while not material_transportar.isalpha():
-            print(" Error: El material debe ser solo letras.")
+            print("Error: El material debe ser solo letras.")
             material_transportar = input("Ingrese el material a transportar: ").strip()
 
         # Validar cantidad de material
         cantidad_material = -1
         while cantidad_material <= 0:
             try:
-                cantidad_material = int(input("Cuántos kg se van a transportar de ese material? (Ingrese -1 para volver) ").strip())
-                if cantidad_material == -1:
-                    return camiones  
+                cantidad_material = int(input("Cuántos kg se van a transportar de ese material? "))
                 if cantidad_material <= 0:
-                    print(" Error: La cantidad debe ser un número positivo.")
+                    print("Error: La cantidad debe ser un número positivo.")
             except ValueError:
-                print(" Error: Debe ingresar un número válido.")
+                print("Error: Debe ingresar un número válido.")
 
         # Validar tipo de viaje
-        tipo_viaje = input("Ingrese el tipo de viaje ('carga'(c) o 'descarga'(d)) o ingrese -1 para volver: ").strip().lower()
-        if tipo_viaje == '-1':
-            return camiones  
+        tipo_viaje = input("Ingrese el tipo de viaje ('carga'(c) o 'descarga'(d)): ").strip().lower()
         while tipo_viaje not in ['carga', 'descarga', 'c', 'd']:
-            print(" Error: Tipo de viaje no válido.")
+            print("Error: Tipo de viaje no válido.")
             tipo_viaje = input("Ingrese el tipo de viaje ('carga' o 'descarga'): ").strip().lower()
 
         tipo_viaje = 'carga' if tipo_viaje in ['c', 'carga'] else 'descarga'
@@ -163,16 +156,16 @@ def cargar_datos_camiones(camiones, opcion):
             'tipo_viaje': tipo_viaje,
             'rutas': {}
         }
-        print(f" Camión con patente {patente_camion} agregado correctamente.")
+        print(f"Camión con patente {patente_camion} agregado correctamente.")
 
         continuar_cargando = input("¿Desea seguir cargando datos de camiones? (s/n): ").strip().lower()
-        return camiones
+        if continuar_cargando == 'n':
+            return camiones
 
     elif opcion == '3':
+        # Modificar camión existente
         print("\n--- Modificar Camión Existente ---")
-        patente_modificar = input("Ingrese la patente del camión a modificar o ingrese -1 para volver: ").strip().upper()
-        if patente_modificar == '-1':
-            return camiones  
+        patente_modificar = input("Ingrese la patente del camión a modificar: ").strip().upper()
         patente_modificar = re.sub(r"\s+", "", patente_modificar)
         if patente_modificar in camiones:
             print(f"Datos actuales: {camiones[patente_modificar]}")
@@ -193,22 +186,20 @@ def cargar_datos_camiones(camiones, opcion):
                     if nueva_cantidad > 0:
                         camiones[patente_modificar]['cantidad'] = nueva_cantidad
             except ValueError:
-                print(" Cantidad no modificada por entrada inválida.")
+                print("Cantidad no modificada por entrada inválida.")
 
             nuevo_tipo_viaje = input("Nuevo tipo de viaje ('carga' o 'descarga'): ").strip().lower()
             if nuevo_tipo_viaje in ['carga', 'descarga', 'c', 'd']:
                 camiones[patente_modificar]['tipo_viaje'] = 'carga' if nuevo_tipo_viaje in ['c', 'carga'] else 'descarga'
             
-            print(f" Camión con patente {patente_modificar} modificado correctamente.")
+            print(f"Camión con patente {patente_modificar} modificado correctamente.")
         else:
-            print(" Error: No se encontró un camión con esa patente.")
+            print("Error: No se encontró un camión con esa patente.")
 
     elif opcion == '4':
+        # Eliminar camión
         print("\n--- Eliminar Camión ---")
-        patente_eliminar = input("Ingrese la patente del camión a eliminar o ingrese -1 para volver: ").strip().upper()
-        if patente_eliminar == '-1':
-            return camiones  
-        
+        patente_eliminar = input("Ingrese la patente del camión a eliminar: ").strip().upper()
         patente_eliminar = re.sub(r"\s+", "", patente_eliminar)
         if patente_eliminar in camiones:
             confirmar = input(f"¿Está seguro de eliminar el camión {patente_eliminar}? (s/n): ").strip().lower()
@@ -216,14 +207,18 @@ def cargar_datos_camiones(camiones, opcion):
                 del camiones[patente_eliminar]
                 print(f"Camión con patente {patente_eliminar} eliminado correctamente.")
             else:
-                print(" Eliminación cancelada.")
+                print("Eliminación cancelada.")
         else:
-            print(" Error: No se encontró un camión con esa patente.")
+            print("Error: No se encontró un camión con esa patente.")
 
     elif opcion == '5':
         # Volver al menú principal
         print("Regresando al menú principal...")
-        continuar = False  
+    else:
+        print("Opción no válida. Intente nuevamente.")
+
+    return camiones
+
 
 def verificar_rutas_duplicadas(camiones):
     """Verifica si hay camiones con rutas duplicadas en el mismo día."""
@@ -263,29 +258,40 @@ def manejar_rutas_duplicadas(rutas_duplicadas, camiones):
 def cargar_rutas(camiones, rutas_disponibles):
     """Carga las rutas para cada camión para cada día de la semana y verifica rutas duplicadas."""
     dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
-    
-    for codigo_camion, datos_camion in camiones.items(): 
-        print(f"\nCargando rutas para el camión {codigo_camion} ({datos_camion['nombre_transportista']}):")
 
-        for dia in dias_semana:
-            ruta = input(f"Ingrese la ruta para el {dia} (o deje vacío si no hay ruta): ").strip().lower()
-            if ruta in rutas_disponibles.keys() or not ruta:
-                datos_camion['rutas'][dia] = ruta if ruta else "Sin viaje"
+    while True:
+        opcion = input("¿Desea cargar rutas para un camión en particular? (s/n): ").strip().lower()
+        if opcion == 's':
+            codigo_camion = input("Ingrese el código del camión: ").strip().upper()
+            if codigo_camion in camiones:
+                cargar_rutas_para_camion(codigo_camion, camiones[codigo_camion], dias_semana, rutas_disponibles)
             else:
-                print(f"La ruta {ruta} no es válida.")
-
-        continuar_cargando = input("¿Desea seguir cargando datos de camiones? (s/n): ").strip().lower() 
-        if continuar_cargando == 'n': 
+                print(f"Error: El camión con código {codigo_camion} no existe.")
+        elif opcion == 'n':
+            for codigo_camion, datos_camion in camiones.items():
+                cargar_rutas_para_camion(codigo_camion, datos_camion, dias_semana, rutas_disponibles)
             break
-    
+        else:
+            print("Opción no válida. Por favor, ingrese 's' o 'n'.")
+
     rutas_duplicadas = verificar_rutas_duplicadas(camiones)
     if rutas_duplicadas:
         camiones = manejar_rutas_duplicadas(rutas_duplicadas, camiones)
     else:
         print("No se encontraron rutas duplicadas.")
 
-    
     return camiones
+
+def cargar_rutas_para_camion(codigo_camion, datos_camion, dias_semana, rutas_disponibles):
+    """Carga rutas para un camión en particular."""
+    print(f"\nCargando rutas para el camión {codigo_camion} ({datos_camion['nombre_transportista']}):")
+    for dia in dias_semana:
+        ruta = input(f"Ingrese la ruta para el {dia} (o deje vacío si no hay ruta): ").strip().lower()
+        if ruta in rutas_disponibles.keys() or not ruta:
+            datos_camion['rutas'][dia] = ruta if ruta else "Sin viaje"
+        else:
+            print(f"La ruta {ruta} no es válida.")
+
 
 def gestionar_stock(camiones, stock_actual):
     """Calcula el total de material transportado y verifica si hay faltante para los próximos viajes."""
