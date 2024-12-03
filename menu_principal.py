@@ -11,12 +11,14 @@ def menu_camiones(camiones):
         print("5. Volver al menú principal")
         
         opcion = input("Seleccione una opción (1-5): ").strip()
-
-        camiones = main.cargar_datos_camiones(camiones, opcion)
+        
         if opcion == '5':
             break
+        
+        camiones = main.cargar_datos_camiones(camiones, opcion)
 
     return camiones
+
 
 def menu_rutas(rutas):
     """Permite al usuario gestionar las rutas disponibles."""
