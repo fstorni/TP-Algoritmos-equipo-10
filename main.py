@@ -385,7 +385,6 @@ def mostrar_datos_camiones(camiones):
             print(f"Error: Clave {e} no encontrada en el camión con patente {patente}")
 
 
-
 import re
 
 def gestionar_rutas(rutas, opcion):
@@ -396,7 +395,10 @@ def gestionar_rutas(rutas, opcion):
     
     elif opcion == '2':
         while True:
-            codigo = input("Ingrese el código de la nueva ruta (formato 'rutaX', donde X es un número): ").strip().lower()
+            codigo = input("Ingrese el código de la nueva ruta (formato 'rutaX', donde X es un número, o ingrese '-1' para volver al menú principal): ").strip().lower()
+            if codigo == '-1':
+                print("Volviendo al menú principal...")
+                break
             # Validar formato de código de ruta
             if re.match(r"^ruta\d+$", codigo):
                 if codigo not in rutas:
@@ -424,6 +426,9 @@ def gestionar_rutas(rutas, opcion):
     
     elif opcion == '3':
         codigo = input("Ingrese el código de la ruta a modificar: ").strip().lower()
+        if codigo == '-1':
+            print("Volviendo al menú principal...")
+            return rutas
         if codigo in rutas:
             while True:
                 origen = input("Ingrese el nuevo origen de la ruta: ").strip()
@@ -446,6 +451,9 @@ def gestionar_rutas(rutas, opcion):
     
     elif opcion == '4':
         codigo = input("Ingrese el código de la ruta a eliminar: ").strip().lower()
+        if codigo == '-1':
+            print("Volviendo al menú principal...")
+            return rutas
         if codigo in rutas:
             confirmar = input(f"¿Está seguro de que desea eliminar la ruta {codigo}? (s/n): ").strip().lower()
             if confirmar == 's':
@@ -457,11 +465,13 @@ def gestionar_rutas(rutas, opcion):
             print("Error: El código de ruta no existe.")
     
     elif opcion == '5':
-        continuar = False
+        print("Volviendo al menú principal...")
+    
     else:
         print("Opción no válida. Por favor, intente de nuevo.")
 
     return rutas
+
 
 
 
