@@ -84,18 +84,7 @@ def guardar_materiales(materiales, archivo='materiales.json'):
     except Exception as e:
         print(f"Error al guardar los materiales: {e}")
 
-def cargar_datos_camiones(camiones):
-    """Gestión de datos de los camiones en un diccionario."""
-    continuar=True
-    while True:
-        print("\n--- Gestión de Camiones ---")
-        print("1. Mostrar camiones actuales")
-        print("2. Agregar camión nuevo")
-        print("3. Modificar camión existente")
-        print("4. Eliminar camión")
-        print("5. Volver al menú principal")
-        
-        opcion = input("Seleccione una opción (1-5): ").strip()
+def cargar_datos_camiones(camiones, opcion):   
         
         if opcion == '1':
             # Mostrar camiones actuales
@@ -171,7 +160,7 @@ def cargar_datos_camiones(camiones):
 
             continuar_cargando = input("¿Desea seguir cargando datos de camiones? (s/n): ").strip().lower() 
             if continuar_cargando == 'n': 
-                continue
+                return
 
         elif opcion == '3':
             # Modificar camión existente
@@ -330,18 +319,7 @@ def gestionar_stock(camiones, stock_actual):
     return stock_actual
 
 
-def gestionar_materiales(materiales):
-    """Permite al usuario gestionar los materiales disponibles."""
-    continuar = True
-    while continuar:
-        print("\n--- Gestión de Materiales ---")
-        print("1. Mostrar materiales actuales")
-        print("2. Agregar nuevo material")
-        print("3. Modificar cantidad de material existente")
-        print("4. Eliminar material")
-        print("5. Volver al menú principal")
-
-        opcion = input("Seleccione una opción (1-5): ")
+def gestionar_materiales(materiales,opcion):
 
         if opcion == '1':
             print("\nMateriales actuales:")
@@ -380,7 +358,7 @@ def gestionar_materiales(materiales):
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
     
-    return materiales
+        return materiales
 
 
 def mostrar_datos_camiones(camiones): 
@@ -389,22 +367,13 @@ def mostrar_datos_camiones(camiones):
     print(f"{'Patente':<15} {'Transportista':<20} {'Material':<15} {'Cantidad (kg)':<15} {'Tipo de Viaje':<15}") 
     print("-" * 80) 
     
-    for camion in camiones.values(): 
-        print(f"{camion['patente']:<15} {camion['nombre_transportista']:<20} {camion['material']:<15} {camion['cantidad']:<15} {camion['tipo_viaje']:<15}")
+    for patente, datos in camiones.items(): 
+        try: 
+            print(f"{datos['patente']:<15} {datos['nombre_transportista']:<20} {datos['material']:<15} {datos['cantidad']:<15} {datos['tipo_viaje']:<15}") 
+        except KeyError as e: 
+            print(f"Error: Clave {e} no encontrada en el camión con patente {patente}")
 
-
-def gestionar_rutas(rutas):
-    """Permite al usuario gestionar las rutas disponibles."""
-    continuar = True
-    while continuar:
-        print("\n--- Gestión de Rutas ---")
-        print("1. Mostrar rutas actuales")
-        print("2. Agregar nueva ruta")
-        print("3. Modificar ruta existente")
-        print("4. Eliminar ruta")
-        print("5. Volver al menú principal")
-
-        opcion = input("Seleccione una opción (1-5): ")
+def gestionar_rutas(rutas,opcion):
 
         if opcion == '1':
             print("\nRutas actuales:")
@@ -447,49 +416,8 @@ def gestionar_rutas(rutas):
             continuar = False
         else:
             print("Opción no válida. Por favor, intente de nuevo.")
-    return rutas
 
-def menu_principal():
-    rutas = cargar_rutas_json()
-    camiones = cargar_camiones_json()
-    materiales = cargar_materiales()
+        return rutas
+
+
     
-
-    continuar = True
-
-    while continuar:
-        print("\n--- Menú Principal ---")
-        print("1. Gestionar rutas")
-        print("2. Gestionar camiones")
-        print("3. Cargar rutas para camiones")
-        print("4. Gestionar stock de materiales")
-        print("5. Mostrar datos de los camiones")
-        print("6. Salir")
-
-        opcion = input("Seleccione una opción (1-6): ")
-
-        if opcion == '1':
-            rutas = gestionar_rutas(rutas)
-            guardar_rutas_json(rutas) 
-        elif opcion == '2':
-            camiones = cargar_datos_camiones(camiones)
-            guardar_camiones_json(camiones)  
-        elif opcion == '3':
-            camiones = cargar_rutas(camiones, rutas)
-            guardar_camiones_json(camiones)  
-        elif opcion == '4':
-            materiales = gestionar_materiales(materiales)
-            guardar_materiales(materiales)    
-        elif opcion == '5':
-            mostrar_datos_camiones(camiones)
-        elif opcion == '6':
-            print("Saliendo del programa. ¡Hasta luego!")
-            guardar_rutas_json(rutas)  
-            guardar_camiones_json(camiones)
-            guardar_materiales(materiales)
-            continuar = False
-        else:
-            print("Opción no válida. Por favor, intente de nuevo.")
-
-
-menu_principal()
