@@ -11,12 +11,11 @@ def menu_camiones(camiones):
         print("5. Volver al menú principal")
         
         opcion = input("Seleccione una opción (1-5): ").strip()
+
         if opcion == '5':
             break
-
         camiones = main.cargar_datos_camiones(camiones, opcion)
-       
-
+        
     return camiones
 
 def menu_rutas(rutas):
@@ -30,12 +29,11 @@ def menu_rutas(rutas):
         print("5. Volver al menú principal")
 
         opcion = input("Seleccione una opción (1-5): ").strip()
+
         if opcion == '5':
             break
-
         rutas = main.gestionar_rutas(rutas, opcion)
-
-
+        
     return rutas
 
 def menu_materiales(materiales):
@@ -49,20 +47,21 @@ def menu_materiales(materiales):
         print("5. Volver al menú principal")
 
         opcion = input("Seleccione una opción (1-5): ").strip()
+        
         if opcion == '5':
             break
-        
         materiales = main.gestionar_materiales(materiales, opcion)
-
-
+        
     return materiales
 
+# Cargar datos desde archivos
 rutas = main.cargar_rutas_json()
 camiones = main.cargar_camiones_json()
 materiales = main.cargar_materiales()
 
 continuar = True
 while continuar:
+    print("\nBienvenidos al sistema de gestion")
     print("\n--- Menú Principal ---")
     print("1. Gestionar rutas")
     print("2. Gestionar camiones")
@@ -78,10 +77,9 @@ while continuar:
         main.guardar_rutas_json(rutas)
     elif opcion == '2':
         camiones = menu_camiones(camiones)
-        main.cargar_camiones_json(camiones)
         main.guardar_camiones_json(camiones)
     elif opcion == '3':
-        camiones = main.cargar_datos_camiones(camiones)
+        camiones = main.cargar_rutas(camiones, rutas) 
         main.guardar_camiones_json(camiones)
     elif opcion == '4':
         materiales = menu_materiales(materiales)
