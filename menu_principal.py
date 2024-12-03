@@ -19,7 +19,6 @@ def menu_camiones(camiones):
 
     return camiones
 
-
 def menu_rutas(rutas):
     """Permite al usuario gestionar las rutas disponibles."""
     while True:
