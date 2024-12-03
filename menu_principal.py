@@ -11,11 +11,11 @@ def menu_camiones(camiones):
         print("5. Volver al menú principal")
         
         opcion = input("Seleccione una opción (1-5): ").strip()
-        
         if opcion == '5':
             break
-        
+
         camiones = main.cargar_datos_camiones(camiones, opcion)
+       
 
     return camiones
 
@@ -30,10 +30,11 @@ def menu_rutas(rutas):
         print("5. Volver al menú principal")
 
         opcion = input("Seleccione una opción (1-5): ").strip()
-
-        rutas = main.gestionar_rutas(rutas, opcion)
         if opcion == '5':
             break
+
+        rutas = main.gestionar_rutas(rutas, opcion)
+
 
     return rutas
 
@@ -48,10 +49,11 @@ def menu_materiales(materiales):
         print("5. Volver al menú principal")
 
         opcion = input("Seleccione una opción (1-5): ").strip()
-        
-        materiales = main.gestionar_materiales(materiales, opcion)
         if opcion == '5':
             break
+        
+        materiales = main.gestionar_materiales(materiales, opcion)
+
 
     return materiales
 
