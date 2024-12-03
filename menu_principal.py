@@ -75,6 +75,7 @@ while continuar:
         main.guardar_rutas_json(rutas)
     elif opcion == '2':
         camiones = menu_camiones(camiones)
+        main.cargar_camiones_json(camiones)
         main.guardar_camiones_json(camiones)
     elif opcion == '3':
         camiones = main.cargar_datos_camiones(camiones)
