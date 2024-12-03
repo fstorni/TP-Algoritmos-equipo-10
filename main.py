@@ -262,15 +262,16 @@ def cargar_rutas(camiones, rutas_disponibles):
     while True:
         opcion = input("¿Desea cargar rutas para un camión en particular? (s/n): ").strip().lower()
         if opcion == 's':
-            codigo_camion = input("Ingrese el código del camión: ").strip().upper()
-            if codigo_camion in camiones:
+            codigo_camion = input("Ingrese el código del camión (o ingrese '-1' para volver al menú): ").strip().upper()
+            if codigo_camion == '-1':
+                print("Volviendo al menú principal...")
+                break
+            elif codigo_camion in camiones:
                 cargar_rutas_para_camion(codigo_camion, camiones[codigo_camion], dias_semana, rutas_disponibles)
             else:
                 print(f"Error: El camión con código {codigo_camion} no existe.")
         elif opcion == 'n':
-            for codigo_camion, datos_camion in camiones.items():
-                cargar_rutas_para_camion(codigo_camion, datos_camion, dias_semana, rutas_disponibles)
-            break
+            break  # Salir del bucle y volver al menú principal
         else:
             print("Opción no válida. Por favor, ingrese 's' o 'n'.")
 
@@ -281,6 +282,17 @@ def cargar_rutas(camiones, rutas_disponibles):
         print("No se encontraron rutas duplicadas.")
 
     return camiones
+
+def cargar_rutas_para_camion(codigo_camion, datos_camion, dias_semana, rutas_disponibles):
+    """Carga rutas para un camión en particular."""
+    print(f"\nCargando rutas para el camión {codigo_camion} ({datos_camion['nombre_transportista']}):")
+    for dia in dias_semana:
+        ruta = input(f"Ingrese la ruta para el {dia} (o deje vacío si no hay ruta): ").strip().lower()
+        if ruta in rutas_disponibles.keys() or not ruta:
+            datos_camion['rutas'][dia] = ruta if ruta else "Sin viaje"
+        else:
+            print(f"La ruta {ruta} no es válida.")
+
 
 def cargar_rutas_para_camion(codigo_camion, datos_camion, dias_semana, rutas_disponibles):
     """Carga rutas para un camión en particular."""
