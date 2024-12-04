@@ -1,5 +1,5 @@
 {
-    "DD 432 DS": {
+    "DD432DS": {
         "patente": "DD 432 DS",
         "nombre_transportista": "jorge",
         "material": "arena",
@@ -14,8 +14,8 @@
         }
     },
    
-    "KK 433 RO": {
-        "patente": "KK 433 RO",
+    "KK433RO": {
+        "patente": "KK433RO",
         "nombre_transportista": "carlos",
         "material": "arena",
         "cantidad": 1000,
@@ -29,8 +29,8 @@
         }
     },
     
-    "DD 333 EE": {
-        "patente": "DD 333 EE",
+    "DD333EE": {
+        "patente": "DD333EE",
         "nombre_transportista": "rosa",
         "material": "ladrillos",
         "cantidad": 100,
